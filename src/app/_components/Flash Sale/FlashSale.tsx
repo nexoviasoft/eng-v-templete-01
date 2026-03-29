@@ -1,6 +1,7 @@
 import { getFlashSaleProducts, Product } from "../../../lib/api-services";
 import CountDown from "./CountDown";
 import FlashSaleProduct from "./FlashSaleProduct";
+import { IoFlash } from "react-icons/io5";
 
 interface FlashSaleProps {
   isPage?: boolean;
@@ -20,7 +21,7 @@ const FlashSale = async ({ isPage = false }: FlashSaleProps = {}) => {
   if (flashSaleProducts.length === 0) {
     if (isPage) {
       return (
-        <section className="max-w-7xl mx-auto px-5 md:pt-10 pt-5 min-h-[50vh] flex flex-col items-center justify-center">
+        <section className="max-w-7xl mx-auto px-5 md:pt-6 pt-3 min-h-[50vh] flex flex-col items-center justify-center">
           <div className="text-center space-y-4">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
               No Flash Sale is running at the moment
@@ -65,7 +66,7 @@ const FlashSale = async ({ isPage = false }: FlashSaleProps = {}) => {
       : 0;
 
   return (
-    <section className=" max-w-7xl mx-auto px-5 md:pt-10 pt-5 ">
+    <section className=" max-w-7xl mx-auto px-5 md:pt-6 pt-3 ">
       <div className=" overflow-hidden bg-gradient-to-r from-[#F3F4F6] to-[#E5E7EB] border border-white/50 shadow-sm rounded-sm relative">
         {/* Background pattern or decoration */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/40 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
@@ -74,6 +75,9 @@ const FlashSale = async ({ isPage = false }: FlashSaleProps = {}) => {
           <div className="flex justify-between items-center gap-4 flex-col sm:flex-row border-b border-gray-200/60 pb-4">
             <div>
               <div className="flex items-center gap-2">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <IoFlash size={18} />
+                </span>
                 <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded animate-pulse">
                   LIVE
                 </span>

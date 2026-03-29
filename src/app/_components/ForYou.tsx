@@ -1,6 +1,7 @@
 import { getProducts, Product } from "../../lib/api-services";
 import Link from "next/link";
 import ForYouGrid from "./ForYouGrid";
+import { FiShoppingBag } from "react-icons/fi";
 
 const ForYou = async () => {
   let products: Product[] = [];
@@ -19,14 +20,24 @@ const ForYou = async () => {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-5 overflow-hidden md:pt-10 pt-5">
-      <div className=" md:mb-5 mb-3 flex items-center justify-between gap-5">
-        <h1 className=" sm:text-2xl text-xl font-bold text-primary">
-          Our Collection
-        </h1>
+    <section className="max-w-7xl mx-auto px-5 overflow-hidden md:pt-6 pt-3">
+      <div className="mb-3 sm:mb-4 flex items-start justify-between gap-5">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <FiShoppingBag size={18} />
+            </span>
+            <h1 className="sm:text-2xl text-xl font-bold text-gray-900">
+              Our Collection
+            </h1>
+          </div>
+          <p className="mt-1 text-xs sm:text-sm text-gray-500">
+            Fresh arrivals and customer favorites in one place.
+          </p>
+        </div>
         <Link
           href={"/products"}
-          className=" text-primary underline underline-offset-4 hover:text-gray-700 cursor-pointer transition-all font-medium"
+          className="shrink-0 text-primary underline underline-offset-4 hover:text-gray-700 cursor-pointer transition-all font-medium text-sm"
         >
           View All Products
         </Link>

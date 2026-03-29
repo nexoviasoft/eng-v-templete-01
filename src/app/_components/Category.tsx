@@ -4,6 +4,7 @@ import { API_CONFIG } from "../../lib/api-config";
 import Image from "next/image";
 import Link from "next/link";
 import EmblaCarousel from "../../components/shared/EmblaCarousel";
+import { TbCategoryPlus } from "react-icons/tb";
 
 const Category = async () => {
   // Note: Backend requires authentication. You may need to use a public token
@@ -17,11 +18,23 @@ const Category = async () => {
   }
 
   return (
-    <section className=" max-w-7xl mx-auto px-5 md:pt-10 pt-5">
+    <section className=" max-w-7xl mx-auto px-5 md:pt-6 pt-3">
       <div>
-        <h1 className=" sm:text-2xl text-xl  font-bold text-primary">
-          Shop by Category
-        </h1>
+        <div className="mb-3 sm:mb-4 flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <TbCategoryPlus size={18} />
+              </span>
+              <h1 className="sm:text-2xl text-xl font-bold text-gray-900">
+                Shop by Category
+              </h1>
+            </div>
+            <p className="mt-1 text-xs sm:text-sm text-gray-500">
+              Explore categories and find what you need faster.
+            </p>
+          </div>
+        </div>
         <div className=" sm:pt-5 pt-3 ">
           <EmblaCarousel dragFree arrowButtons>
             {categories.map((category: Category) => (

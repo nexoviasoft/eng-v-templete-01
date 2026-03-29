@@ -2,6 +2,7 @@ import Image from "next/image";
 import TopProductCarousel from "./TopProductCarousel";
 import { API_CONFIG } from "../../../lib/api-config";
 import { getTopProducts } from "../../../lib/api-services";
+import { FiStar } from "react-icons/fi";
 
 const img_1 =
   "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1916&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -26,10 +27,22 @@ const TopProduct = async () => {
   const items = section.carouselItems || [];
 
   return (
-    <section className="  max-w-7xl mx-auto px-5 md:pt-10 pt-5 overflow-hidden">
-      <h1 className=" sm:text-2xl text-xl font-bold text-primary mb-4">
-        Top Products
-      </h1>
+    <section className="  max-w-7xl mx-auto px-5 md:pt-6 pt-3 overflow-hidden">
+      <div className="mb-3 sm:mb-4 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <FiStar size={18} />
+            </span>
+            <h1 className="sm:text-2xl text-xl font-bold text-gray-900">
+              Top Products
+            </h1>
+          </div>
+          <p className="mt-1 text-xs sm:text-sm text-gray-500">
+            Curated highlights from our best picks.
+          </p>
+        </div>
+      </div>
       <div className=" grid gap-3 md:grid-cols-4 grid-cols-2 w-full ">
         <div className=" overflow-hidden rounded-md md:rounded-3xl">
           <Image
