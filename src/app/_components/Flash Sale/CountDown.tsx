@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 
 interface CountDownProps {
   initialSecondsLeft: number;
+  variant?: "light" | "dark";
 }
 
-const CountDown = ({ initialSecondsLeft }: CountDownProps) => {
+const CountDown = ({ initialSecondsLeft, variant = "light" }: CountDownProps) => {
   const [timeLeft, setTimeLeft] = useState<number>(
     initialSecondsLeft > 0 ? initialSecondsLeft : 0,
   );
@@ -26,26 +27,40 @@ const CountDown = ({ initialSecondsLeft }: CountDownProps) => {
   };
 
   const { hours, minutes, seconds } = formatTime(timeLeft);
+  const boxBase =
+    "w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-lg font-bold sm:text-lg text-base";
+  const labelClass =
+    variant === "dark"
+      ? "text-white/60 text-[10px] uppercase font-bold tracking-wider"
+      : "text-gray-500 text-[10px] uppercase font-bold tracking-wider";
+  const boxClass =
+    variant === "dark"
+      ? `${boxBase} bg-white/10 border border-white/10 text-white shadow-sm backdrop-blur`
+      : `${boxBase} bg-white shadow-sm border border-gray-200 text-gray-900`;
+  const secondsClass =
+    variant === "dark"
+      ? `${boxBase} bg-white/10 border border-white/10 text-primary shadow-sm backdrop-blur`
+      : `${boxBase} bg-white shadow-sm border border-gray-200 text-primary`;
 
   return (
     <div className="flex gap-3">
       <div className="flex flex-col items-center gap-1">
-        <div className="bg-white shadow-sm border border-gray-200 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-lg text-gray-900 font-bold sm:text-lg text-base">
+        <div className={boxClass}>
           {hours < 10 ? `0${hours}` : hours}
         </div>
-        <p className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Hours</p>
+        <p className={labelClass}>Hours</p>
       </div>
       <div className="flex flex-col items-center gap-1">
-        <div className="bg-white shadow-sm border border-gray-200 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-lg text-gray-900 font-bold sm:text-lg text-base">
+        <div className={boxClass}>
           {minutes < 10 ? `0${minutes}` : minutes}
         </div>
-        <p className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Mins</p>
+        <p className={labelClass}>Mins</p>
       </div>
       <div className="flex flex-col items-center gap-1">
-        <div className="bg-white shadow-sm border border-gray-200 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-lg text-red-500 font-bold sm:text-lg text-base">
+        <div className={secondsClass}>
           {seconds < 10 ? `0${seconds}` : seconds}
         </div>
-        <p className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Secs</p>
+        <p className={labelClass}>Secs</p>
       </div>
     </div>
   );
