@@ -9,6 +9,7 @@ import CustomerInfo from "./_components/CustomerInfo";
 import toast from "react-hot-toast";
 import {
   createOrder,
+  saveIncompleteOrder,
   getPublicPromocodes,
   PromoCode,
   getProduct,
@@ -70,7 +71,11 @@ const CheckoutContent = () => {
   const [initialPromoFromQuery, setInitialPromoFromQuery] = useState<
     string | null
   >(null);
+  const [incompleteOrderId, setIncompleteOrderId] = useState<number | null>(null);
+  const incompleteOrderIdRef = useRef<number | null>(null);
+  const orderSucceededRef = useRef(false); // prevent incomplete save after real order placed
   const hasAppliedInitialPromo = useRef(false);
+  const saveTimeoutRef = useRef<any>(null);
 
   const getPromoProductIds = (p: PromoCode): number[] => {
     if (!Array.isArray((p as any).productIds)) return [];
@@ -366,7 +371,7 @@ const CheckoutContent = () => {
 
       // Ensure promo is applicable to at least one product in the cart, if productIds restriction exists
       if (Array.isArray(match.productIds) && match.productIds.length > 0) {
-        const itemProductIds = items.map((i) => i.product.id);
+        const itemProductIds = items.map((i: any) => i.product.id);
         const promoProductIds = getPromoProductIds(match);
         const applicable = promoProductIds.some((id) =>
           itemProductIds.includes(id),
@@ -457,6 +462,73 @@ const CheckoutContent = () => {
     fetchPromos();
   }, [searchParams, userSession?.companyId, items, queryProduct?.product?.id]);
 
+  // Keep a ref always pointing to the latest save function to avoid stale closures in event handlers
+  const saveIncompleteRef = useRef<() => void>(() => {});
+
+  // Build the latest save function and store it in the ref on every render
+  const performSaveIncomplete = async () => {
+    if (orderSucceededRef.current) return; // real order placed — don't save incomplete
+    if (!name.trim() && !phone.trim() && !email.trim()) return;
+
+    const companyId =
+      searchParams.get("companyId") ||
+      userSession?.companyId ||
+      API_CONFIG.companyId;
+
+    if (!companyId) return;
+
+    try {
+      const payload = {
+        customerId: userSession?.userId,
+        customerName: name,
+        customerPhone: phone,
+        customerEmail: email,
+        customerAddress: [district.trim(), address.trim()].filter(Boolean).join(", "),
+        items: items.map((i: any) => ({
+          productId: i.product.id,
+          quantity: i.quantity,
+        })),
+      };
+
+      const res = await saveIncompleteOrder(
+        payload,
+        companyId,
+        incompleteOrderIdRef.current || undefined
+      );
+
+      if (res?.id) {
+        incompleteOrderIdRef.current = res.id;
+        setIncompleteOrderId(res.id);
+      }
+    } catch (error) {
+      console.error("Failed to save incomplete order:", error);
+    }
+  };
+  // Always update the ref so event listeners always call the freshest version
+  saveIncompleteRef.current = performSaveIncomplete;
+
+  // Debounced auto-save: fires 2s after user stops typing
+  useEffect(() => {
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => saveIncompleteRef.current(), 2000);
+
+    return () => {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    };
+  }, [name, phone, email, address, district, items]);
+
+  // Save on page leave (beforeunload + cleanup) using the always-fresh ref
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      saveIncompleteRef.current();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      saveIncompleteRef.current(); // also save on React unmount (navigation)
+    };
+  }, []); // ← empty deps: only register/unregister once; ref always has fresh fn
+
   const handleOrder = async () => {
     const companyId =
       searchParams.get("companyId") ||
@@ -537,6 +609,7 @@ const CheckoutContent = () => {
 
       const res = (await createOrder(payload, userSession?.accessToken, companyId)) as any;
 
+      orderSucceededRef.current = true; // prevent cleanup from saving incomplete order
       toast.success("Order placed successfully");
 
       if (userSession?.accessToken && userSession?.userId) {

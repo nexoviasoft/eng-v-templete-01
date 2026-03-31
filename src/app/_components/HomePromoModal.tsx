@@ -15,8 +15,6 @@ import CountDown from "./Flash Sale/CountDown";
 
 type ModalMode = "loading" | "flash" | "welcome" | "hidden";
 
-const STORAGE_KEY = "home_promo_modal_dismissed_v1";
-
 const toNumber = (value: unknown): number => {
   const n = typeof value === "string" ? Number(value) : typeof value === "number" ? value : NaN;
   return Number.isFinite(n) ? n : 0;
@@ -61,14 +59,6 @@ export default function HomePromoModal() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    try {
-      if (typeof window !== "undefined" && sessionStorage.getItem(STORAGE_KEY) === "1") {
-        setMode("hidden");
-        setOpen(false);
-        return;
-      }
-    } catch { }
-
     let cancelled = false;
 
     const load = async () => {
@@ -114,9 +104,6 @@ export default function HomePromoModal() {
 
   const close = () => {
     setOpen(false);
-    try {
-      if (typeof window !== "undefined") sessionStorage.setItem(STORAGE_KEY, "1");
-    } catch { }
   };
 
   if (!open || mode === "hidden") return null;
@@ -284,4 +271,3 @@ export default function HomePromoModal() {
     </div>
   );
 }
-
