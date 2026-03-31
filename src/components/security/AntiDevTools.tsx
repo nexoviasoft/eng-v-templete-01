@@ -54,8 +54,12 @@ export default function AntiDevTools() {
     const id = setInterval(detect, 800);
     detect();
     return () => {
-      document.removeEventListener("contextmenu", onContextMenu, { capture: true } as any);
-      document.removeEventListener("keydown", onKeyDown, { capture: true } as any);
+      document.removeEventListener("contextmenu", onContextMenu, {
+        capture: true,
+      } as any);
+      document.removeEventListener("keydown", onKeyDown, {
+        capture: true,
+      } as any);
       window.removeEventListener("resize", detect, { capture: true } as any);
       clearInterval(id);
     };
@@ -68,20 +72,30 @@ export default function AntiDevTools() {
       window.fetch = (async () => {
         throw new Error("Network blocked");
       }) as any;
-      if (!originalXHROpenRef.current) originalXHROpenRef.current = XMLHttpRequest.prototype.open;
-      if (!originalXHRSendRef.current) originalXHRSendRef.current = XMLHttpRequest.prototype.send;
-      XMLHttpRequest.prototype.open = function (this: XMLHttpRequest, ...args: any[]) {
+      if (!originalXHROpenRef.current)
+        originalXHROpenRef.current = XMLHttpRequest.prototype.open;
+      if (!originalXHRSendRef.current)
+        originalXHRSendRef.current = XMLHttpRequest.prototype.send;
+      XMLHttpRequest.prototype.open = function (
+        this: XMLHttpRequest,
+        ...args: any[]
+      ) {
         return originalXHROpenRef.current!.apply(this, args as any);
       } as any;
-      XMLHttpRequest.prototype.send = function (this: XMLHttpRequest, ..._args: any[]) {
+      XMLHttpRequest.prototype.send = function (
+        this: XMLHttpRequest,
+        ..._args: any[]
+      ) {
         try {
           this.abort();
         } catch {}
       } as any;
     } else {
       if (originalFetchRef.current) window.fetch = originalFetchRef.current;
-      if (originalXHROpenRef.current) XMLHttpRequest.prototype.open = originalXHROpenRef.current as any;
-      if (originalXHRSendRef.current) XMLHttpRequest.prototype.send = originalXHRSendRef.current as any;
+      if (originalXHROpenRef.current)
+        XMLHttpRequest.prototype.open = originalXHROpenRef.current as any;
+      if (originalXHRSendRef.current)
+        XMLHttpRequest.prototype.send = originalXHRSendRef.current as any;
     }
   }, [blocked]);
 

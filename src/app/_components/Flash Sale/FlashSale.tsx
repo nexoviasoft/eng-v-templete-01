@@ -135,36 +135,32 @@ const FlashSale = async ({ isPage = false }: FlashSaleProps = {}) => {
           </div>
         </>
       ) : (
-        <div className="overflow-hidden bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/10 shadow-sm rounded-sm relative">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-
-          <div className="relative z-10 sm:p-8 p-5 flex flex-col gap-5">
-            <div className="flex justify-between items-center gap-4 flex-col sm:flex-row border-b border-primary/10 pb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <IoFlash size={18} />
-                  </span>
-                  <span className="bg-primary text-white text-xs font-bold px-2 py-0.5 rounded">
-                    LIVE
-                  </span>
-                  <h2 className="sm:text-3xl text-2xl font-black text-gray-800 tracking-tight">
-                    Flash Sale
-                  </h2>
-                </div>
-                <p className="sm:text-sm text-xs text-gray-600 mt-1 font-medium">
-                  {`Enjoy Flash Sale Deals up to ${maxDiscount}%!`}
-                </p>
+        <>
+          <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <IoFlash size={18} />
+                </span>
+                <span className="bg-primary text-white text-xs font-bold px-2 py-0.5 rounded">
+                  LIVE
+                </span>
+                <h2 className="sm:text-3xl text-2xl font-black text-gray-900 tracking-tight">
+                  Flash Sale
+                </h2>
               </div>
-              <div>
-                <CountDown initialSecondsLeft={initialSecondsLeft} variant="light" />
-              </div>
+              <p className="sm:text-sm text-xs text-gray-500 mt-1 font-medium">
+                {`Enjoy Flash Sale Deals up to ${maxDiscount}%!`}
+              </p>
             </div>
-            <div>
-              <FlashSaleProduct />
+            <div className="shrink-0">
+              <CountDown initialSecondsLeft={initialSecondsLeft} variant="light" />
             </div>
           </div>
-        </div>
+          <div className="mt-4">
+            <FlashSaleProduct />
+          </div>
+        </>
       )}
     </section>
   );
