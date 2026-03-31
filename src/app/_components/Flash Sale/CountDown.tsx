@@ -43,7 +43,7 @@ const CountDown = ({ initialSecondsLeft, variant = "light" }: CountDownProps) =>
       : `${boxBase} bg-white shadow-sm border border-gray-200 text-primary`;
 
   return (
-    <div className="flex gap-3">
+    <div className="flex flex-nowrap gap-2 sm:gap-3">
       <div className="flex flex-col items-center gap-1">
         <div className={boxClass}>
           {hours < 10 ? `0${hours}` : hours}

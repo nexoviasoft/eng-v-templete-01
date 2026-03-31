@@ -1,6 +1,11 @@
 import EmblaCarousel from "../../../../components/shared/EmblaCarousel";
 import ProductCard from "../../../../components/ui/ProductCard";
-import { getProductBySlug, getProductsByCategory, Product } from "../../../../lib/api-services";
+import {
+  getProductBySlug,
+  getProductsByCategory,
+  Product,
+} from "../../../../lib/api-services";
+import { FiStar } from "react-icons/fi";
 
 interface ImageProps {
   name: string;
@@ -31,21 +36,28 @@ interface ProductProps {
 
 // Helper function to map REST API product to component format
 function mapProductToCardFormat(apiProduct: Product): ProductProps {
-  const off = apiProduct.discountPrice && apiProduct.price
-    ? Math.round(((apiProduct.price - apiProduct.discountPrice) / apiProduct.price) * 100)
-    : 0;
+  const off =
+    apiProduct.discountPrice && apiProduct.price
+      ? Math.round(
+          ((apiProduct.price - apiProduct.discountPrice) / apiProduct.price) *
+            100,
+        )
+      : 0;
 
-  const images: ImageProps[] = apiProduct.images?.map((img, index) => ({
-    name: img.alt || `Image ${index + 1}`,
-    url: img.url,
-  })) || [];
+  const images: ImageProps[] =
+    apiProduct.images?.map((img, index) => ({
+      name: img.alt || `Image ${index + 1}`,
+      url: img.url,
+    })) || [];
 
-  const variant: VariantProps[] = [{
-    price: Number(apiProduct.price),
-    size: "Default",
-    available_quantity: 100, // Default value - would need to come from inventory if available
-    stock_status: apiProduct.isActive ? "in_stock" : "out_of_stock",
-  }];
+  const variant: VariantProps[] = [
+    {
+      price: Number(apiProduct.price),
+      size: "Default",
+      available_quantity: 100, // Default value - would need to come from inventory if available
+      stock_status: apiProduct.isActive ? "in_stock" : "out_of_stock",
+    },
+  ];
 
   return {
     SKU: apiProduct.sku,
@@ -58,7 +70,9 @@ function mapProductToCardFormat(apiProduct: Product): ProductProps {
     description: apiProduct.description,
     shortDescription: apiProduct.description,
     price: Number(apiProduct.price),
-    discountPrice: apiProduct.discountPrice ? Number(apiProduct.discountPrice) : 0,
+    discountPrice: apiProduct.discountPrice
+      ? Number(apiProduct.discountPrice)
+      : 0,
   };
 }
 
@@ -70,7 +84,7 @@ const RelatedProducts = async ({ id }: { id: string }) => {
     const currentProduct = await getProductBySlug(id);
     const categoryName = currentProduct.category?.name;
 
-    const allProducts = categoryName 
+    const allProducts = categoryName
       ? await getProductsByCategory(undefined, categoryName)
       : [];
 
@@ -89,10 +103,20 @@ const RelatedProducts = async ({ id }: { id: string }) => {
   }
 
   return (
-    <section className=" max-w-7xl mx-auto  md:pt-10 pt-5 ">
-      <h1 className=" sm:text-2xl text-xl font-bold text-primary">
-        সম্পর্কিত পণ্যসমূহ
-      </h1>
+    <section className="max-w-7xl mx-auto md:pt-10 pt-5">
+      <div className="mb-3 sm:mb-4 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <FiStar size={18} />
+            </span>
+            <h2 className="sm:text-2xl text-xl font-black text-gray-900 tracking-tight">
+              Related Products
+            </h2>
+          </div>
+          <div className="mt-1 h-0.5 w-28 bg-primary rounded-full" />
+        </div>
+      </div>
       <div>
         <EmblaCarousel dragFree arrowButtons>
           {relatedProducts.map((item, index) => (

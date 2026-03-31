@@ -136,16 +136,16 @@ const FlashSale = async ({ isPage = false }: FlashSaleProps = {}) => {
         </>
       ) : (
         <>
-          <div className="flex justify-between items-start gap-4 flex-col sm:flex-row">
+          <div className="flex justify-between items-start gap-4 flex-row">
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap">
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <IoFlash size={18} />
                 </span>
                 <span className="bg-primary text-white text-xs font-bold px-2 py-0.5 rounded">
                   LIVE
                 </span>
-                <h2 className="sm:text-3xl text-2xl font-black text-gray-900 tracking-tight">
+                <h2 className="sm:text-3xl text-xl font-black text-gray-900 tracking-tight whitespace-nowrap">
                   Flash Sale
                 </h2>
               </div>

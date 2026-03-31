@@ -48,8 +48,6 @@ interface VariantProps {
   stock_status: string;
 }
 
-
-
 interface ProductProps {
   id?: number;
   SKU: string;
@@ -91,8 +89,7 @@ function mapProductToComponentFormat(
     numericPrice &&
     effectiveDiscountPrice < numericPrice
       ? Math.round(
-          ((numericPrice - effectiveDiscountPrice) / numericPrice) *
-            100,
+          ((numericPrice - effectiveDiscountPrice) / numericPrice) * 100,
         )
       : 0;
 
@@ -159,9 +156,7 @@ function mapProductToComponentFormat(
     documentId: apiProduct.id.toString(),
     off,
     price: numericPrice,
-    discountPrice: numericDiscount != null
-      ? numericDiscount
-      : undefined,
+    discountPrice: numericDiscount != null ? numericDiscount : undefined,
     title: apiProduct.name,
     total_sale: 0, // Not available in REST API
     categories,
@@ -170,11 +165,9 @@ function mapProductToComponentFormat(
     reviews,
     variant,
     sizes,
-    
+
     companyId,
   };
-
-
 }
 
 console.log("ProductProps");
@@ -277,9 +270,6 @@ const Product = async ({ params }: { params: Promise<{ id: string }> }) => {
 
             {/* related products */}
             <div className="mt-4">
-              <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-3">
-                Related Products
-              </h2>
               <RelatedProducts id={id} />
             </div>
           </div>
