@@ -73,6 +73,7 @@ const CheckoutContent = () => {
   >(null);
   const [incompleteOrderId, setIncompleteOrderId] = useState<number | null>(null);
   const incompleteOrderIdRef = useRef<number | null>(null);
+  const orderSucceededRef = useRef(false); // prevent incomplete save after real order placed
   const hasAppliedInitialPromo = useRef(false);
   const saveTimeoutRef = useRef<any>(null);
 
@@ -461,7 +462,12 @@ const CheckoutContent = () => {
     fetchPromos();
   }, [searchParams, userSession?.companyId, items, queryProduct?.product?.id]);
 
+  // Keep a ref always pointing to the latest save function to avoid stale closures in event handlers
+  const saveIncompleteRef = useRef<() => void>(() => {});
+
+  // Build the latest save function and store it in the ref on every render
   const performSaveIncomplete = async () => {
+    if (orderSucceededRef.current) return; // real order placed — don't save incomplete
     if (!name.trim() && !phone.trim() && !email.trim()) return;
 
     const companyId =
@@ -498,26 +504,30 @@ const CheckoutContent = () => {
       console.error("Failed to save incomplete order:", error);
     }
   };
+  // Always update the ref so event listeners always call the freshest version
+  saveIncompleteRef.current = performSaveIncomplete;
 
+  // Debounced auto-save: fires 2s after user stops typing
   useEffect(() => {
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(performSaveIncomplete, 2000);
+    saveTimeoutRef.current = setTimeout(() => saveIncompleteRef.current(), 2000);
 
     return () => {
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     };
   }, [name, phone, email, address, district, items]);
 
+  // Save on page leave (beforeunload + cleanup) using the always-fresh ref
   useEffect(() => {
     const handleBeforeUnload = () => {
-      performSaveIncomplete();
+      saveIncompleteRef.current();
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      performSaveIncomplete();
+      saveIncompleteRef.current(); // also save on React unmount (navigation)
     };
-  }, [name, phone, email, address, district, items]);
+  }, []); // ← empty deps: only register/unregister once; ref always has fresh fn
 
   const handleOrder = async () => {
     const companyId =
@@ -599,6 +609,7 @@ const CheckoutContent = () => {
 
       const res = (await createOrder(payload, userSession?.accessToken, companyId)) as any;
 
+      orderSucceededRef.current = true; // prevent cleanup from saving incomplete order
       toast.success("Order placed successfully");
 
       if (userSession?.accessToken && userSession?.userId) {
