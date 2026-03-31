@@ -740,6 +740,33 @@ export async function createOrder(
 }
 
 /**
+ * Save an incomplete order for abandoned cart tracking
+ */
+export async function saveIncompleteOrder(
+  payload: {
+    customerId?: number;
+    customerName?: string;
+    customerPhone?: string;
+    customerEmail?: string;
+    customerAddress?: string;
+    items: { productId: number; quantity: number }[];
+  },
+  companyId?: string,
+  orderId?: number,
+): Promise<any> {
+  const companyIdParam = companyId || API_CONFIG.companyId;
+  const params = new URLSearchParams();
+  if (companyIdParam) params.append("companyId", companyIdParam);
+  if (orderId) params.append("orderId", orderId.toString());
+
+  const response = await axios.post(
+    getApiUrl(`/orders/incomplete?${params.toString()}`),
+    payload
+  );
+  return response.data?.data || response.data;
+}
+
+/**
  * For guest accounts created implicitly via checkout, allow them to set an initial password.
  */
 export async function initialSetPasswordForGuest(params: {

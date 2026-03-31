@@ -9,6 +9,7 @@ import CustomerInfo from "./_components/CustomerInfo";
 import toast from "react-hot-toast";
 import {
   createOrder,
+  saveIncompleteOrder,
   getPublicPromocodes,
   PromoCode,
   getProduct,
@@ -70,7 +71,10 @@ const CheckoutContent = () => {
   const [initialPromoFromQuery, setInitialPromoFromQuery] = useState<
     string | null
   >(null);
+  const [incompleteOrderId, setIncompleteOrderId] = useState<number | null>(null);
+  const incompleteOrderIdRef = useRef<number | null>(null);
   const hasAppliedInitialPromo = useRef(false);
+  const saveTimeoutRef = useRef<any>(null);
 
   const getPromoProductIds = (p: PromoCode): number[] => {
     if (!Array.isArray((p as any).productIds)) return [];
@@ -366,7 +370,7 @@ const CheckoutContent = () => {
 
       // Ensure promo is applicable to at least one product in the cart, if productIds restriction exists
       if (Array.isArray(match.productIds) && match.productIds.length > 0) {
-        const itemProductIds = items.map((i) => i.product.id);
+        const itemProductIds = items.map((i: any) => i.product.id);
         const promoProductIds = getPromoProductIds(match);
         const applicable = promoProductIds.some((id) =>
           itemProductIds.includes(id),
@@ -456,6 +460,64 @@ const CheckoutContent = () => {
 
     fetchPromos();
   }, [searchParams, userSession?.companyId, items, queryProduct?.product?.id]);
+
+  const performSaveIncomplete = async () => {
+    if (!name.trim() && !phone.trim() && !email.trim()) return;
+
+    const companyId =
+      searchParams.get("companyId") ||
+      userSession?.companyId ||
+      API_CONFIG.companyId;
+
+    if (!companyId) return;
+
+    try {
+      const payload = {
+        customerId: userSession?.userId,
+        customerName: name,
+        customerPhone: phone,
+        customerEmail: email,
+        customerAddress: [district.trim(), address.trim()].filter(Boolean).join(", "),
+        items: items.map((i: any) => ({
+          productId: i.product.id,
+          quantity: i.quantity,
+        })),
+      };
+
+      const res = await saveIncompleteOrder(
+        payload,
+        companyId,
+        incompleteOrderIdRef.current || undefined
+      );
+
+      if (res?.id) {
+        incompleteOrderIdRef.current = res.id;
+        setIncompleteOrderId(res.id);
+      }
+    } catch (error) {
+      console.error("Failed to save incomplete order:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(performSaveIncomplete, 2000);
+
+    return () => {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    };
+  }, [name, phone, email, address, district, items]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      performSaveIncomplete();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      performSaveIncomplete();
+    };
+  }, [name, phone, email, address, district, items]);
 
   const handleOrder = async () => {
     const companyId =
