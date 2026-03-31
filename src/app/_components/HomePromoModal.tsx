@@ -7,6 +7,7 @@ import { IoFlash } from "react-icons/io5";
 import { FiX } from "react-icons/fi";
 import { API_CONFIG } from "../../lib/api-config";
 import {
+  getCategories,
   getFlashSaleProducts,
   getSystemUserByCompanyId,
   type Product,
@@ -52,11 +53,22 @@ const calcSecondsLeft = (products: Product[]): number => {
   return Math.max(0, Math.floor((nearest - now) / 1000));
 };
 
+const resolveAssetUrl = (raw?: string | null): string | null => {
+  if (!raw || typeof raw !== "string" || !raw.trim()) return null;
+  const url = raw.trim();
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith("//")) return `https:${url}`;
+  const normalized = url.startsWith("/") ? url : `/${url}`;
+  return `${API_CONFIG.baseURL.replace(/\/$/, "")}${normalized}`;
+};
+
 export default function HomePromoModal() {
   const [mode, setMode] = useState<ModalMode>("loading");
   const [open, setOpen] = useState(false);
   const [companyName, setCompanyName] = useState<string>("Welcome");
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [categoryNames, setCategoryNames] = useState<string[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,14 +85,27 @@ export default function HomePromoModal() {
           return;
         }
 
-        const user = await getSystemUserByCompanyId(API_CONFIG.companyId).catch(() => null);
+        const [user, categories] = await Promise.all([
+          getSystemUserByCompanyId(API_CONFIG.companyId).catch(() => null),
+          getCategories(API_CONFIG.companyId).catch(() => []),
+        ]);
         if (cancelled) return;
         setCompanyName(user?.companyName || "Welcome");
+        setCompanyLogo(resolveAssetUrl(user?.companyLogo ?? null));
+        const names = Array.isArray(categories)
+          ? categories
+              .map((c) => (c as any)?.name)
+              .filter((n): n is string => typeof n === "string" && !!n.trim())
+              .map((n) => n.trim())
+          : [];
+        setCategoryNames(names);
         setMode("welcome");
         setOpen(true);
       } catch {
         if (cancelled) return;
         setCompanyName("Welcome");
+        setCompanyLogo(null);
+        setCategoryNames([]);
         setMode("welcome");
         setOpen(true);
       }
@@ -101,6 +126,14 @@ export default function HomePromoModal() {
 
   const maxDiscount = useMemo(() => calcMaxDiscount(products), [products]);
   const secondsLeft = useMemo(() => calcSecondsLeft(products), [products]);
+  const categoryPreviewText = useMemo(() => {
+    if (!categoryNames.length) return "Explore our collection of products and find your favorites today.";
+    const unique = Array.from(new Set(categoryNames));
+    const top = unique.slice(0, 8);
+    const hasMore = unique.length > top.length;
+    const list = top.join(", ");
+    return `We currently offer products across ${unique.length} categories, including ${list}${hasMore ? ", and more" : ""}.`;
+  }, [categoryNames]);
 
   const close = () => {
     setOpen(false);
@@ -118,10 +151,10 @@ export default function HomePromoModal() {
           <button
             type="button"
             onClick={close}
-            className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+            className="absolute right-4 top-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow-lg ring-1 ring-black/10 hover:bg-white transition-colors"
             aria-label="Close"
           >
-            <FiX size={18} />
+            <FiX size={20} />
           </button>
 
           {mode === "flash" ? (
@@ -164,12 +197,23 @@ export default function HomePromoModal() {
                     <IoFlash className="text-white" />
                     HELLO
                   </span>
+                  {companyLogo ? (
+                    <div className="relative h-9 w-9 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/25">
+                      <Image
+                        src={companyLogo}
+                        alt={`${companyName} logo`}
+                        fill
+                        sizes="36px"
+                        className="object-contain p-1.5"
+                      />
+                    </div>
+                  ) : null}
                 </div>
                 <h2 className="mt-3 text-2xl sm:text-3xl font-black text-white tracking-tight">
                   {`Welcome to ${companyName}`}
                 </h2>
                 <p className="mt-2 text-xs sm:text-sm text-white/75 max-w-xl">
-                  Discover new arrivals, best deals, and curated collections.
+                  {categoryPreviewText}
                 </p>
               </div>
 

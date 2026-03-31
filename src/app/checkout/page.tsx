@@ -29,6 +29,7 @@ const CheckoutContent = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [district, setDistrict] = useState("");
+  const [upazila, setUpazila] = useState("");
   const [tShirtSize, setTShirtSize] = useState<string>("");
   const [promoCode, setPromoCode] = useState("");
   const [promo, setPromo] = useState<PromoCode | null>(null);
@@ -71,7 +72,9 @@ const CheckoutContent = () => {
   const [initialPromoFromQuery, setInitialPromoFromQuery] = useState<
     string | null
   >(null);
-  const [incompleteOrderId, setIncompleteOrderId] = useState<number | null>(null);
+  const [incompleteOrderId, setIncompleteOrderId] = useState<number | null>(
+    null,
+  );
   const incompleteOrderIdRef = useRef<number | null>(null);
   const orderSucceededRef = useRef(false); // prevent incomplete save after real order placed
   const hasAppliedInitialPromo = useRef(false);
@@ -138,11 +141,12 @@ const CheckoutContent = () => {
           const finalPrice = Number(
             Number.isFinite(discountOverride) && discountOverride > 0
               ? discountOverride
-              : (product.isFlashSell && typeof product.flashSellPrice === "number")
+              : product.isFlashSell &&
+                  typeof product.flashSellPrice === "number"
                 ? product.flashSellPrice
                 : hasDiscount
                   ? product.discountPrice
-                  : product.price ?? 0,
+                  : (product.price ?? 0),
           );
           setQueryProduct({
             id: 0, // Temporary ID for query product
@@ -186,6 +190,7 @@ const CheckoutContent = () => {
       setPhone((userSession.user.phone as string | undefined) || "");
       setAddress((userSession.user.address as string | undefined) || "");
       setDistrict((userSession.user.district as string | undefined) || "");
+      setUpazila((userSession.user.upazila as string | undefined) || "");
     }
   }, [userSession]);
 
@@ -298,7 +303,12 @@ const CheckoutContent = () => {
       quantity: number;
       unitPrice: number;
       totalPrice: number;
-      product: { id: number; name: string; thumbnail?: string; images?: { url: string; alt?: string }[] };
+      product: {
+        id: number;
+        name: string;
+        thumbnail?: string;
+        images?: { url: string; alt?: string }[];
+      };
     },
     nextQty: number,
   ) => {
@@ -377,7 +387,9 @@ const CheckoutContent = () => {
           itemProductIds.includes(id),
         );
         if (!applicable) {
-          toast.error("This coupon is not applicable for your selected products");
+          toast.error(
+            "This coupon is not applicable for your selected products",
+          );
           setPromo(null);
           return;
         }
@@ -483,7 +495,9 @@ const CheckoutContent = () => {
         customerName: name,
         customerPhone: phone,
         customerEmail: email,
-        customerAddress: [district.trim(), address.trim()].filter(Boolean).join(", "),
+        customerAddress: [upazila.trim(), district.trim(), address.trim()]
+          .filter(Boolean)
+          .join(", "),
         items: items.map((i: any) => ({
           productId: i.product.id,
           quantity: i.quantity,
@@ -493,7 +507,7 @@ const CheckoutContent = () => {
       const res = await saveIncompleteOrder(
         payload,
         companyId,
-        incompleteOrderIdRef.current || undefined
+        incompleteOrderIdRef.current || undefined,
       );
 
       if (res?.id) {
@@ -510,12 +524,15 @@ const CheckoutContent = () => {
   // Debounced auto-save: fires 2s after user stops typing
   useEffect(() => {
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => saveIncompleteRef.current(), 2000);
+    saveTimeoutRef.current = setTimeout(
+      () => saveIncompleteRef.current(),
+      2000,
+    );
 
     return () => {
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     };
-  }, [name, phone, email, address, district, items]);
+  }, [name, phone, email, address, district, upazila, items]);
 
   // Save on page leave (beforeunload + cleanup) using the always-fresh ref
   useEffect(() => {
@@ -547,8 +564,14 @@ const CheckoutContent = () => {
 
     // tShirtSize optional now; carried from product page if present
 
-    if (!name.trim() || !phone.trim() || !address.trim()) {
-      toast.error("Name, phone, and address are required");
+    if (
+      !name.trim() ||
+      !phone.trim() ||
+      !district.trim() ||
+      !upazila.trim() ||
+      !address.trim()
+    ) {
+      toast.error("Name, phone, district, upazila, and address are required");
       return;
     }
 
@@ -570,7 +593,7 @@ const CheckoutContent = () => {
     try {
       setOrderLoading(true);
 
-      const combinedAddress = [district.trim(), address.trim()]
+      const combinedAddress = [upazila.trim(), district.trim(), address.trim()]
         .filter(Boolean)
         .join(", ");
 
@@ -607,7 +630,11 @@ const CheckoutContent = () => {
         payload.customerEmail = email || userSession.user?.email || undefined;
       }
 
-      const res = (await createOrder(payload, userSession?.accessToken, companyId)) as any;
+      const res = (await createOrder(
+        payload,
+        userSession?.accessToken,
+        companyId,
+      )) as any;
 
       orderSucceededRef.current = true; // prevent cleanup from saving incomplete order
       toast.success("Order placed successfully");
@@ -616,12 +643,17 @@ const CheckoutContent = () => {
         await refetch();
         router.push("/my-account/orders");
       } else {
-        const orderId: number | undefined = res?.order?.id ?? res?.id ?? undefined;
+        const orderId: number | undefined =
+          res?.order?.id ?? res?.id ?? undefined;
         const emailToUse = email || userSession?.user?.email || "";
         if (emailToUse && orderId) {
-          router.push(`/complete-signup?email=${encodeURIComponent(emailToUse)}&orderId=${orderId}`);
+          router.push(
+            `/complete-signup?email=${encodeURIComponent(emailToUse)}&orderId=${orderId}`,
+          );
         } else if (emailToUse) {
-          router.push(`/complete-signup?email=${encodeURIComponent(emailToUse)}`);
+          router.push(
+            `/complete-signup?email=${encodeURIComponent(emailToUse)}`,
+          );
         } else {
           router.push("/");
         }
@@ -671,6 +703,8 @@ const CheckoutContent = () => {
               setPhone={setPhone}
               district={district}
               setDistrict={setDistrict}
+              upazila={upazila}
+              setUpazila={setUpazila}
               address={address}
               setAddress={setAddress}
               paymentMethod={paymentMethod}
