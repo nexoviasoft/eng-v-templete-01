@@ -1,80 +1,121 @@
-# ই-কমার্স প্রজেক্ট - ইনোভেশন সলিউশনস (InnoWave Solutions)
+# E-Commerce Project – Advanced Shopping Template by NexoviaSoft
 
-এটি একটি পূর্ণাঙ্গ ই-কমার্স টেমপ্লেট যা আধুনিক টেকনোলজি স্ট্যাক ব্যবহার করে তৈরি করা হয়েছে। এই প্রজেক্টটিতে একটি অনলাইন স্টোরের জন্য প্রয়োজনীয় সকল ফিচার এবং ফাংশনালিটি অন্তর্ভুক্ত রয়েছে।
+This is a comprehensive, modern, and high-performance e-commerce template developed using the latest technology stack. It is designed to provide a seamless shopping experience for users while offering powerful management tools for business owners. This template includes everything from secure authentication and product management to advanced fraud detection and reseller portals.
 
-## 🚀 মূল ফিচারসমূহ (Key Features)
+---
 
-### ১. ইউজার অথেনটিকেশন (User Authentication)
-- **রেজিস্ট্রেশন এবং লগইন:** সিকিউর লগইন এবং সাইন-আপ সিস্টেম।
-- **পাসওয়ার্ড রিসেট:** ইমেইলের মাধ্যমে পাসওয়ার্ড ভুলে গেলে তা রিসেট করার সুবিধা।
-- **কমপ্লিট সাইন-আপ:** ইউজারের অতিরিক্ত তথ্য সংগ্রহের জন্য বিশেষ পেজ।
+## 🚀 Key Features & Functionalities
 
-### ২. প্রোডাক্ট ম্যানেজমেন্ট (Product Management)
-- **ফ্ল্যাশ সেল (Flash Sale):** নির্দিষ্ট সময়ের জন্য ডিসকাউন্ট অফার এবং কাউন্টডাউন টাইমার।
-- **টপ প্রোডাক্টস এবং ট্রেন্ডিং:** জনপ্রিয় এবং নতুন প্রোডাক্টগুলোর আলাদা সেকশন।
-- **ক্যাটাগরি ভিত্তিক ব্রাউজিং:** বিভিন্ন ক্যাটাগরি অনুযায়ী প্রোডাক্ট ফিল্টার করার সুবিধা।
-- **প্রোডাক্ট ডিটেইলস:** প্রোডাক্টের গ্যালারি, ভেরিয়েন্ট (সাইজ, কালার), রিভিউ এবং ডেসক্রিপশন।
+### 1. **Secure User Authentication**
+- **Flexible Login/Registration:** Robust authentication system for customer accounts.
+- **Next-Auth Integration:** Secure session management and protected routes.
+- **Password Recovery:** Built-in "Forgot Password" functionality via email.
+- **Profile Completion:** Specialized flow for gathering essential user details post-registration.
 
-### ৩. শপিং এক্সপেরিয়েন্স (Shopping Experience)
-- **কার্ট ড্রয়ার (Cart Drawer):** যেকোনো পেজ থেকে সহজে কার্ট দেখার এবং ম্যানেজ করার সুবিধা।
-- **ভিউ কার্ট পেজ:** কার্টে থাকা প্রোডাক্টগুলোর পরিমাণ পরিবর্তন বা রিমুভ করার পূর্ণাঙ্গ পেজ।
-- **চেকআউট ফ্লো (Checkout Flow):** কাস্টমার ইনফরমেশন, পেমেন্ট মেথড সিলেকশন এবং কুপন কোড ব্যবহারের সুবিধা।
+### 2. **Dynamic Product Management**
+- **Flash Sales & Deals:** Real-time countdown timers for time-sensitive discounts to drive urgency.
+- **Trending & Popular Sections:** Automated sections for "Top Products" and "Trending Items" to boost engagement.
+- **Advanced Filtering:** Browse products by categories, price ranges, and availability.
+- **Comprehensive Product Pages:** High-quality image galleries, variant selections (size, color, etc.), detailed descriptions, and user reviews.
+- **Related Products:** Intelligent suggestions based on the current product view.
 
-### ৪. ইউজার ড্যাশবোর্ড (User Account)
-- **অর্ডার হিস্ট্রি:** পূর্বের সকল অর্ডারের তালিকা এবং বর্তমান স্ট্যাটাস।
-- **অ্যাড্রেস বুক:** শিপিং এবং বিলিং অ্যাড্রেস সেভ করে রাখার সুবিধা।
-- **রিভিউ ম্যানেজমেন্ট:** কেনা প্রোডাক্টগুলোর উপর রিভিউ দেওয়ার অপশন।
+### 3. **Premium Shopping Experience**
+- **Interactive Cart Drawer:** A quick-access sidebar cart available on every page for instant updates.
+- **Full Cart Management:** A dedicated "View Cart" page for adjusting quantities, removing items, and reviewing totals.
+- **Optimized Checkout Flow:** A multi-step checkout process including address autocomplete, secure payment method selection (BKash, Nagad, etc.), and coupon code application.
 
-### ৫. অতিরিক্ত টুলস (Advanced Tools)
-- **ফ্রড চেকার (Fraud Checker):** কাস্টমারের নির্ভরযোগ্যতা যাচাই করার জন্য বিশেষ টুল।
-- **অর্ডার ট্র্যাকিং:** অর্ডারের বর্তমান অবস্থা সরাসরি ট্র্যাক করার সুবিধা।
-- **রিসেলার প্রোগ্রাম:** যারা রিসেলিং করতে চান তাদের জন্য আলাদা রেজিস্ট্রেশন এবং পোর্টাল।
+### 4. **User-Centric Dashboard**
+- **Order History & Tracking:** Detailed view of past and current orders with real-time status updates.
+- **Address Management:** Save multiple shipping and billing addresses for faster future checkouts.
+- **Review System:** Customers can rate and review purchased products, enhancing social proof.
+- **Personalized Settings:** Manage account details and security preferences.
 
-## 🛠 টেকনোলজি স্ট্যাক (Tech Stack)
+### 5. **Advanced & Specialized Tools**
+- **Fraud Checker:** A smart utility to verify customer reliability and minimize fraudulent transactions.
+- **Order Tracking Portal:** A dedicated page for guests and users to track their orders using Order IDs.
+- **Reseller Program:** A complete module for resellers, including registration and a specialized dashboard.
+- **Anti-DevTools Security:** Built-in protection to prevent unauthorized inspection of the frontend code.
 
-- **ফ্রেমওয়ার্ক:** [Next.js](https://nextjs.org/) (App Router)
-- **ল্যাঙ্গুয়েজ:** [TypeScript](https://www.typescriptlang.org/)
-- **স্টাইলিং:** [Tailwind CSS](https://tailwindcss.com/) এবং [Ant Design](https://ant.design/)
-- **স্টেট ম্যানেজমেন্ট & API:** [Apollo Client](https://www.apollographql.com/docs/react/) (GraphQL)
-- **অ্যানিমেশন:** [Framer Motion](https://www.framer.com/motion/) এবং [Animate.css](https://animate.style/)
-- **আইকন:** [Lucide React](https://lucide.dev/) এবং [React Icons](https://react-icons.github.io/react-icons/)
+---
 
-## 📂 প্রজেক্ট স্ট্রাকচার (Project Structure)
+## 🛠 Technology Stack
+
+### **Frontend & Framework**
+- **Next.js (App Router):** Leveraging Server Components, SEO optimization, and fast routing.
+- **TypeScript:** Ensuring type safety and better developer experience.
+- **Tailwind CSS:** For highly customizable and responsive UI design.
+- **Ant Design (Antd):** Professional-grade UI components and theme integration.
+
+### **State Management & Data Fetching**
+- **Apollo Client (GraphQL):** Efficient data fetching, caching, and state management.
+- **React Context API:** Global state management for Authentication and Shopping Cart.
+- **Axios:** For standard REST API calls where necessary.
+
+### **Animations & UI/UX**
+- **Framer Motion:** Smooth page transitions and interactive element animations.
+- **Embla Carousel:** High-performance, touch-friendly product and banner carousels.
+- **Animate.css:** Pre-built CSS animations for quick UI enhancements.
+
+---
+
+## 📂 Project Architecture
 
 ```text
 src/
-├── app/            # Next.js App Router (Pages and API)
-├── components/     # Reusable UI Components
-├── context/        # React Context (Auth, Cart)
-├── lib/            # API Services, GraphQL Queries/Mutations
-├── types/          # TypeScript Type Definitions
-└── utils/          # Helper Functions and Providers
+├── app/            # Next.js App Router (Pages, API Routes, Layouts)
+├── components/     # Reusable UI Components (Shared, UI, Layout-specific)
+├── context/        # Global React Contexts (Auth, Cart)
+├── lib/            # External library configurations (Apollo, API Services)
+├── types/          # Global TypeScript Interface and Type definitions
+├── theme/          # Custom Ant Design theme configurations
+└── utils/          # Helper functions, formatters, and providers
 ```
 
-## ⚙️ ইন্সটলেশন গাইড (Installation Guide)
+---
 
-১. প্রজেক্টটি ক্লোন করুন:
-```bash
-git clone <repository-url>
-```
+## ⚙️ Getting Started
 
-২. ডিপেন্ডেন্সি ইন্সটল করুন:
-```bash
-npm install
-```
+### **Prerequisites**
+- Node.js (Latest LTS recommended)
+- npm or yarn
 
-৩. ডেভেলপমেন্ট সার্ভার চালু করুন:
+### **Installation**
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Configure Environment Variables:**
+   Create a `.env.local` file in the root and add your API keys and configuration.
+
+### **Development**
+Run the development server:
 ```bash
 npm run dev
 ```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-৪. ব্রাউজারে ওপেন করুন: `http://localhost:3000`
-
-## 📄 পলিসি এবং অন্যান্য (Policies)
-- প্রাইভেসী পলিসি
-- রিফান্ড এবং রিটার্ন পলিসি
-- টার্মস এন্ড কন্ডিশনস
-- কন্টাক্ট আস
+### **Production**
+Build the project for production:
+```bash
+npm run build
+npm start
+```
 
 ---
-তৈরি করেছে **InnoWave Solutions**
+
+## 📄 Policies & Compliance
+- **Privacy Policy:** Comprehensive user data protection guidelines.
+- **Refund & Return Policy:** Clear terms for product returns and refunds.
+- **Terms & Conditions:** Standard legal agreement for platform usage.
+
+---
+
+## 🤝 Contact & Support
+Developed and Maintained by **NexoviaSoft**. For any queries or custom development, feel free to reach out.
+
+---
+© 2026 NexoviaSoft. All rights reserved.
